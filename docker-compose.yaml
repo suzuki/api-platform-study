@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  database:
+    image: 'mysql:8.0'
+    container_name: 'api-platform-study-db'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'master'
+    ports:
+      - '43306:3306'
+    expose:
+      - 43306
+    volumes:
+      - ./db:/var/lib/mysql

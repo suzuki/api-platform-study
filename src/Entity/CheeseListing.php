@@ -7,6 +7,7 @@ use App\Repository\CheeseListingRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @ApiResource(
@@ -16,8 +17,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     "post"
  *   },
  *   itemOperations={"get", "put"},
- *   normalizationContext={"groups"={"cheese_listing:read"}},
- *   denormalizationContext={"groups"={"cheese_listing:write"}}
+ *   normalizationContext={"groups"={"cheese_listing:read"}, "swagger_definition_name"="Read"},
+ *   denormalizationContext={"groups"={"cheese_listing:write"}, "swagger_definition_name"="Write"}
  * )
  * @ORM\Entity(repositoryClass=CheeseListingRepository::class)
  */
@@ -58,8 +59,9 @@ class CheeseListing
      */
     private $isPublished = false;
 
-    public function __construct()
+    public function __construct(string $title)
     {
+        $this->title = $title;
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -96,6 +98,7 @@ class CheeseListing
      * The description of the cheese as raw text.
      *
      * @Groups({"cheese_listing:write"})
+     * @SerializedName("description")
      */
     public function setTextDescription(string $description): self
     {

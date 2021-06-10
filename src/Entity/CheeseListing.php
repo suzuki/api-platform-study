@@ -5,7 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use App\Repository\CheeseListingRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,8 +25,10 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  *   normalizationContext={"groups"={"cheese_listing:read"}, "swagger_definition_name"="Read"},
  *   denormalizationContext={"groups"={"cheese_listing:write"}, "swagger_definition_name"="Write"}
  * )
+ * @ApiFilter(PropertyFilter::class)
  * @ApiFilter(BooleanFilter::class, properties={"isPublished"})
  * @ApiFilter(SearchFilter::class, properties={"title": "partial"})
+ * @ApiFilter(RangeFilter::class, properties={"price"})
  * @ORM\Entity(repositoryClass=CheeseListingRepository::class)
  */
 class CheeseListing
@@ -98,6 +102,18 @@ class CheeseListing
 
     //     return $this;
     // }
+
+    /**
+     * @Groups({"cheese_listing:read"})
+     */
+    public function getShortDescription(): ?string
+    {
+        if (strlen($this->description) < 40) {
+            return $this->description;
+        }
+
+        return substr($this->description, 0, 40) . '...';
+    }
 
     /**
      * The description of the cheese as raw text.

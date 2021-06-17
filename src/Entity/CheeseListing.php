@@ -22,7 +22,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "get"={},
  *     "post"
  *   },
- *   itemOperations={"get", "put"},
+ *   itemOperations={
+ *     "get"={
+ *       "normalization_context"={"groups"={"cheese_listing:read", "cheese_listing:item:get"}}
+ *     },
+ *     "put"
+ *   },
  *   attributes={
  *     "pagination_items_per_page"=10,
  *     "formats"={"jsonld", "json", "html", "jsonhal", "csv"={"text/csv"}}
@@ -47,7 +52,7 @@ class CheeseListing
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"cheese_listing:read", "cheese_listing:write"})
+     * @Groups({"cheese_listing:read", "cheese_listing:write", "user:read"})
      * @Assert\NotBlank()
      * @Assert\Length(
      *   min=2,
@@ -66,7 +71,7 @@ class CheeseListing
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"cheese_listing:read", "cheese_listing:write"})
+     * @Groups({"cheese_listing:read", "cheese_listing:write", "user:read"})
      * @Assert\NotBlank()
      */
     private $price;
